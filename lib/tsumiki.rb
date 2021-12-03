@@ -1,4 +1,6 @@
-require "tsumiki/version"
+# frozen_string_literal: true
+
+require 'tsumiki/version'
 
 module Tsumiki
   class Error < StandardError; end

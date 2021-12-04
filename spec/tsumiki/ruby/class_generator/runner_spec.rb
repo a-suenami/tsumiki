@@ -7,44 +7,61 @@ describe Tsumiki::Ruby::ClassGenerator::Runner do
   end
 
   context 'generate a simple class' do
-    it do
-      class_context = {
+    let(:class_context) do
+      {
         class_name: 'Tsumiki',
         public_methods: [
           { name: 'method', content: '1 + 2' }
         ]
       }
-      generated_class_string = Tsumiki::Ruby::ClassGenerator::Runner.call(class_context)
+    end
 
-      expected = <<~CLASS
+    let(:expected) do
+      <<~CLASS
       class Tsumiki
         def method
           1 + 2
         end
       end
       CLASS
-
-      expect(generated_class_string).to eq expected
     end
 
-    it do
-      class_context = {
-        class_name: 'Tsumiki2',
+    subject { Tsumiki::Ruby::ClassGenerator::Runner.call(class_context) }
+
+    it 'works' do
+      is_expected.to eq expected
+    end
+  end
+
+  context 'generate a class under module' do
+    let(:class_context) do
+      {
+        module: 'GrandParent::Parent',
+        class_name: 'Tsumiki',
         public_methods: [
-          { name: 'new_method', content: 'a + b' }
+          { name: 'method', content: '1 + 2' }
         ]
       }
-      generated_class_string = Tsumiki::Ruby::ClassGenerator::Runner.call(class_context)
+    end
 
-      expected = <<~CLASS
-      class Tsumiki2
-        def new_method
-          a + b
+    let(:expected) do
+      <<~CLASS
+      module GrandParent
+        module Parent
+          class Tsumiki
+            def method
+              1 + 2
+            end
+          end
         end
       end
       CLASS
+    end
 
-      expect(generated_class_string).to eq expected
+    subject { Tsumiki::Ruby::ClassGenerator::Runner.call(class_context) }
+
+    it 'works' do
+      is_expected.to eq expected
     end
   end
 end

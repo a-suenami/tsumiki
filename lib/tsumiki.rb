@@ -2,6 +2,7 @@
 
 require 'tsumiki/version'
 require 'tsumiki/generator'
+require 'tsumiki/ruby'
 
 module Tsumiki
   class Error < StandardError; end

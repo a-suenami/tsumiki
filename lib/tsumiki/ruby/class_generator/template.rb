@@ -4,6 +4,78 @@ module Tsumiki
   module Ruby
     module ClassGenerator
       class Template
+        attr_accessor :context
+
+        def build(context)
+          self.context = context
+          render_template(root_template)
+        end
+
+        def modules
+          @modules ||= (context[:module] || '').split('::')
+        end
+
+        private
+
+        def indent_level
+          @indent_level ||= 0
+        end
+
+        def indent!
+          @indent_level ||= 0
+          @indent_level += 1
+        end
+
+        def outdent!
+          @indent_level -= 1
+        end
+
+        def with_indent
+          indent = ' ' * (indent_level * 2)
+          indent!
+          indent
+        end
+
+        def with_outdent
+          outdent!
+          ' ' * (indent_level * 2)
+        end
+
+        def root_template
+          <<~TEMPLATE
+          <%- modules.each do |m| -%>
+          <%= with_indent %>module <%= m %>
+          <%- end -%>
+          <%= render_class %>
+          <%- modules.each do |_| -%>
+          <%= with_outdent %>end
+          <%- end -%>
+          TEMPLATE
+        end
+
+        def render_class
+          render_template(template_class)
+        end
+
+        def template_class
+          template = <<~TEMPLATE
+          class <%= context[:class_name] %>
+            <%- context[:public_methods].each do |method| -%>
+            def <%= method[:name] %>
+              <%= method[:content] %>
+            end
+            <%- end -%>
+          end
+          TEMPLATE
+
+          template.split("\n").map do |line|
+            (" " * (indent_level * 2)) + line
+          end.join("\n")
+        end
+
+        def render_template(template)
+          ERB.new(template, nil, '-').result(binding)
+        end
       end
     end
   end

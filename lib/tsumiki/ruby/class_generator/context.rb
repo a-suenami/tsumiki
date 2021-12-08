@@ -9,7 +9,12 @@ module Tsumiki
         end
 
         def [](key)
-          @properties[key.to_sym]
+          value = @properties[key.to_sym]
+          if value.is_a?(Hash)
+            Context.new(value)
+          else
+            value
+          end
         end
       end
     end

@@ -8,12 +8,12 @@ describe Tsumiki::Ruby::ClassGenerator::Runner do
 
   context 'generate a simple class' do
     let(:class_context) do
-      {
+      Tsumiki::Ruby::ClassGenerator::Context.new(
         class_name: 'Tsumiki',
         public_methods: [
           { name: 'method', content: '1 + 2' }
         ]
-      }
+      )
     end
 
     let(:expected) do

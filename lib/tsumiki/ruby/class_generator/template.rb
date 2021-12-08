@@ -65,11 +65,25 @@ module Tsumiki
               <%= method[:content] %>
             end
             <%- end -%>
+            <%- unless (context[:private_methods] || []).empty? -%>
+
+            private
+
+            <%- context[:private_methods].each do |method| -%>
+            def <%= method[:name] %>
+              <%= method[:content] %>
+            end
+            <%- end -%>
+            <%- end -%>
           end
           TEMPLATE
 
           template.split("\n").map do |line|
-            (" " * (indent_level * 2)) + line
+            if line.empty?
+              line
+            else
+              (" " * (indent_level * 2)) + line
+            end
           end.join("\n")
         end
 

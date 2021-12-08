@@ -35,13 +35,13 @@ describe Tsumiki::Ruby::ClassGenerator::Runner do
 
   context 'generate a class under module' do
     let(:class_context) do
-      {
+      Tsumiki::Ruby::ClassGenerator::Context.new(
         module: 'GrandParent::Parent',
         class_name: 'Tsumiki',
         public_methods: [
           { name: 'method', content: '1 + 2' }
         ]
-      }
+      )
     end
 
     let(:expected) do
@@ -51,6 +51,47 @@ describe Tsumiki::Ruby::ClassGenerator::Runner do
           class Tsumiki
             def method
               1 + 2
+            end
+          end
+        end
+      end
+      CLASS
+    end
+
+    subject { Tsumiki::Ruby::ClassGenerator::Runner.call(class_context) }
+
+    it 'works' do
+      is_expected.to eq expected
+    end
+  end
+
+  context 'generate a class, withic has private methods' do
+    let(:class_context) do
+      Tsumiki::Ruby::ClassGenerator::Context.new(
+        module: 'GrandParent::Parent',
+        class_name: 'Tsumiki',
+        public_methods: [
+          { name: 'it_is_public_method', content: "'public'" }
+        ],
+        private_methods: [
+          { name: 'it_is_private_method', content: "'private'" }
+        ]
+      )
+    end
+
+    let(:expected) do
+      <<~CLASS
+      module GrandParent
+        module Parent
+          class Tsumiki
+            def it_is_public_method
+              'public'
+            end
+
+            private
+
+            def it_is_private_method
+              'private'
             end
           end
         end

@@ -59,7 +59,7 @@ module Tsumiki
 
         def template_class
           template = <<~TEMPLATE
-          class <%= context[:class_name] %>
+          class <%= context[:class_name] %><% if context[:parent_class_name] %> < <%= context[:parent_class_name] %><% end %>
             <%- context[:public_methods].each do |method| -%>
             def <%= method[:name] %>
               <%= method[:content] %>

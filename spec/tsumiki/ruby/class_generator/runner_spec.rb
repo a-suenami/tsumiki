@@ -105,4 +105,37 @@ describe Tsumiki::Ruby::ClassGenerator::Runner do
       is_expected.to eq expected
     end
   end
+
+  context 'generate a class, which extends another class' do
+    let(:class_context) do
+      Tsumiki::Ruby::ClassGenerator::Context.new(
+        module: 'GrandParent::Parent',
+        class_name: 'Tsumiki',
+        parent_class_name: 'ParentClass',
+        public_methods: [
+          { name: 'method', content: "1 + 2" }
+        ]
+      )
+    end
+
+    let(:expected) do
+      <<~CLASS
+      module GrandParent
+        module Parent
+          class Tsumiki < ParentClass
+            def method
+              1 + 2
+            end
+          end
+        end
+      end
+      CLASS
+    end
+
+    subject { Tsumiki::Ruby::ClassGenerator::Runner.call(class_context) }
+
+    it 'works' do
+      is_expected.to eq expected
+    end
+  end
 end

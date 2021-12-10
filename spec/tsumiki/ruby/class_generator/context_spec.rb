@@ -5,6 +5,7 @@ describe Tsumiki::Ruby::ClassGenerator::Context do
     Tsumiki::Ruby::ClassGenerator::Context.new(
       module: 'GrandParent::Parent',
       class_name: 'Tsumiki',
+      parent_class_name: 'ParentClass',
       public_methods: [
         { name: 'method', content: '1 + 2' }
       ]
@@ -45,6 +46,11 @@ describe Tsumiki::Ruby::ClassGenerator::Context do
   describe 'class_name' do
     subject { subject_context[:class_name] }
     it { is_expected.to eq 'Tsumiki' }
+  end
+
+  describe 'parent_class_name' do
+    subject { subject_context[:parent_class_name] }
+    it { is_expected.to eq 'ParentClass' }
   end
 
   describe 'public_methods' do

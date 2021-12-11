@@ -43,6 +43,16 @@ module Tsumiki
 
         def root_template
           <<~TEMPLATE
+          <%- if context[:magic_comments] -%>
+          <%- context[:magic_comments].each do |magic_comment| -%>
+          <%- if magic_comment.is_a?(Hash) && magic_comment[:key] && magic_comment[:value] -%>
+          # <%= magic_comment[:key] %>: <%= magic_comment[:value] %>
+          <%- else -%>
+          # <%= magic_comment.to_s %>
+          <%- end -%>
+          <%- end -%>
+
+          <%- end -%>
           <%- modules.each do |m| -%>
           <%= with_indent %>module <%= m %>
           <%- end -%>

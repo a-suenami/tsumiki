@@ -8,7 +8,11 @@ describe Tsumiki::Ruby::ClassGenerator::Context do
       parent_class_name: 'ParentClass',
       public_methods: [
         { name: 'method', content: '1 + 2' }
-      ]
+      ],
+      magic_comments: [
+        { key: 'frozen_string_literal', value: true },
+        '# -*- encoding: UTF-8 -*-'
+      ],
     )
   end
 
@@ -19,7 +23,9 @@ describe Tsumiki::Ruby::ClassGenerator::Context do
       [
         :module,
         :class_name,
+        :parent_class_name,
         :public_methods,
+        :magic_commets,
       ].sample
     end
 
@@ -60,4 +66,16 @@ describe Tsumiki::Ruby::ClassGenerator::Context do
       is_expected.to eq [{name: 'method', content: '1 + 2'}]
     end
   end
+
+  describe 'magic_comments' do
+    subject { subject_context[:magic_comments] }
+    it { is_expected.to be_a Array }
+    it 'has specified magic comments' do
+      is_expected.to eq [
+        { key: 'frozen_string_literal', value: true },
+        '# -*- encoding: UTF-8 -*-'
+      ]
+    end
+  end
+
 end

@@ -70,6 +70,15 @@ module Tsumiki
         def template_class
           template = <<~TEMPLATE
           class <%= context[:class_name] %><% if context[:parent_class_name] %> < <%= context[:parent_class_name] %><% end %>
+            <%- if !context[:extend_modules].empty? || !context[:include_modules].empty? -%>
+            <%- context[:extend_modules].each do |extend_module| -%>
+            extend <%= extend_module %>
+            <%- end -%>
+            <%- context[:include_modules].each do |include_module| -%>
+            include <%= include_module %>
+            <%- end -%>
+
+            <%- end -%>
             <%- context[:public_methods].each do |method| -%>
             def <%= method[:name] %>
               <%= method[:content] %>

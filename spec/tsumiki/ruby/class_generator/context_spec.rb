@@ -6,6 +6,13 @@ describe Tsumiki::Ruby::ClassGenerator::Context do
       module: 'GrandParent::Parent',
       class_name: 'Tsumiki',
       parent_class_name: 'ParentClass',
+      include_modules: [
+        'ActiveModel::Model',
+        'ActiveModel::Attributes',
+      ],
+      extend_modules: [
+        'Some::ModuleName',
+      ],
       public_methods: [
         { name: 'method', content: '1 + 2' }
       ],
@@ -24,6 +31,8 @@ describe Tsumiki::Ruby::ClassGenerator::Context do
         :module,
         :class_name,
         :parent_class_name,
+        :include_modules,
+        :extend_modules,
         :public_methods,
         :magic_commets,
       ].sample
@@ -57,6 +66,18 @@ describe Tsumiki::Ruby::ClassGenerator::Context do
   describe 'parent_class_name' do
     subject { subject_context[:parent_class_name] }
     it { is_expected.to eq 'ParentClass' }
+  end
+
+  describe 'include_modules' do
+    subject { subject_context[:include_modules] }
+    it { is_expected.to be_a Array }
+    it { is_expected.to eq ['ActiveModel::Model', 'ActiveModel::Attributes', ] }
+  end
+
+  describe 'extend_modules' do
+    subject { subject_context[:extend_modules] }
+    it { is_expected.to be_a Array }
+    it { is_expected.to eq ['Some::ModuleName'] }
   end
 
   describe 'public_methods' do

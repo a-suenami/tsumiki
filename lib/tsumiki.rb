@@ -4,6 +4,7 @@ require 'tsumiki/version'
 require 'tsumiki/generator'
 require 'tsumiki/ruby'
 require 'tsumiki/javascript'
+require 'tsumiki/typescript'
 
 module Tsumiki
   class Error < StandardError; end

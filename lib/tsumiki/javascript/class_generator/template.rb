@@ -15,9 +15,10 @@ module Tsumiki
           <<~TEMPLATE
           class <%= context[:class_name] %> {
             <%- context[:public_methods].each do |method| -%>
-            <%= method[:name] %>() {
+            <%= method[:name] %>(<%= (method[:arguments] || []).join(', ') %>) {
               <%= method[:content] %>
             }
+
             <%- end -%>
           }
           TEMPLATE

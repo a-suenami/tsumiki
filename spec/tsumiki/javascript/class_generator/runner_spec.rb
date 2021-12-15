@@ -11,7 +11,8 @@ describe Tsumiki::Javascript::ClassGenerator::Runner do
       Tsumiki::Javascript::ClassGenerator::Context.new(
         class_name: 'Tsumiki',
         public_methods: [
-          { name: 'method', content: 'return 1 + 2;' }
+          { name: 'method1', content: 'return 1 + 2;' },
+          { name: 'method2', arguments: ['arg1', 'arg2'], content: 'return arg1 + arg2;' }
         ]
       )
     end
@@ -19,9 +20,14 @@ describe Tsumiki::Javascript::ClassGenerator::Runner do
     let(:expected) do
       <<~CLASS
       class Tsumiki {
-        method() {
+        method1() {
           return 1 + 2;
         }
+
+        method2(arg1, arg2) {
+          return arg1 + arg2;
+        }
+
       }
       CLASS
     end
